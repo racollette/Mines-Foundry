@@ -43,6 +43,9 @@ export class OffersPage implements OnInit, OnDestroy {
         console.log('Editing item', offerId)
     }
 
+    sendCancellationEmail() {
+    }
+
     onCancel(eventId: string, slidingItem: IonItemSliding) {
         slidingItem.close();
 

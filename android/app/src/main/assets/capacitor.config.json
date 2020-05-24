@@ -1,0 +1,14 @@
+{
+  "appId": "mines.foundry.app.ionic.angular",
+  "appName": "foundry",
+  "bundledWebRuntime": false,
+  "npmClient": "npm",
+  "webDir": "www",
+  "plugins": {
+    "SplashScreen": {
+      "launchShowDuration": 0
+    }
+  },
+  "cordova": {},
+  "linuxAndroidStudioPath": "/home/ryan/android-studio/bin/studio.sh"
+}

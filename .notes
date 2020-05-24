@@ -1,0 +1,13 @@
+// Add capacitor to project
+ng build (do this first)
+ionic capacitor add android
+
+// Update capacitor config file
+appId
+android studio path
+
+// Copy www to android app
+ionic capacitor copy android
+
+// Do everything
+ionic capacitor run android
