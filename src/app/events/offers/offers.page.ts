@@ -5,6 +5,10 @@ import { IonItemSliding, LoadingController, AlertController } from '@ionic/angul
 import { Router } from '@angular/router';
 import { Subscription } from 'rxjs';
 
+
+//import { EmailComposer } from '@ionic-native/email-composer/ngx';
+//import { Email } from '@teamhive/capacitor-email';
+
 import { Event } from '../event.model';
 
 @Component({
@@ -22,12 +26,15 @@ export class OffersPage implements OnInit, OnDestroy {
         private router: Router,
         private loadingCtrl: LoadingController,
         private alertCtrl: AlertController,
+        //private emailComposer: EmailComposer
+        //private email: Email
     ) { }
 
     ngOnInit() {
         this.eventsSub = this.eventsService.events.subscribe(events => {
             this.offers = events;
         });
+
     }
 
     ionViewWillEnter() {
@@ -43,8 +50,50 @@ export class OffersPage implements OnInit, OnDestroy {
         console.log('Editing item', offerId)
     }
 
-    sendCancellationEmail() {
-    }
+    // sendCancellationEmail() {
+    //     const email = new Email();
+
+    //     const hasPermission = email.hasPermission();
+
+    //     if (!hasPermission) {
+    //         email.requestPermission();
+    //     }
+
+    //     const available = email.isAvailable({
+    //         alias: 'gmail' // gmail, outlook, yahoo *optional*,
+    //     });
+
+    //     // available.hasAccount  *If email is setup*
+    //     // available.hasApp  *If device has alias supplied*
+
+    //     if (available) {
+    //         email.open({
+    //             to: ['racollette@gmail.com'],
+    //             subject: 'Party',
+    //             body: 'Hi bring drinks...',
+    //             isHtml: false
+    //         })
+
+    //     }
+    // }
+
+    // sendCancellationEmail() {
+    //     this.emailComposer.isAvailable().then((available: boolean) => {
+    //         if (available) {
+    //             //Now we know we can send
+    //         }
+    //     });
+
+    //     let email = {
+    //         to: 'racollette@gmail.com',
+    //         subject: 'Cordova Icons',
+    //         body: 'How are you? Nice greetings from Leipzig',
+    //         isHtml: true
+    //     }
+
+    //     // Send a text message using default options
+    //     this.emailComposer.open(email);
+    // }
 
     onCancel(eventId: string, slidingItem: IonItemSliding) {
         slidingItem.close();
@@ -69,6 +118,7 @@ export class OffersPage implements OnInit, OnDestroy {
                             loadingEl.present();
                             this.eventsService.cancelEvent(eventId).subscribe(() => {
                                 loadingEl.dismiss();
+                                //this.sendCancellationEmail();
                             });
                         })
                     }

@@ -59,8 +59,11 @@ export class EventsService {
     // ]);
 
     private freePourThumbnails = [
-        '../../assets/images/stock1.jpg',
-         '../../assets/images/stock2.jpg'
+        '../../assets/images/stock1.png',
+         '../../assets/images/stock2.png',
+         '../../assets/images/stock3.png',
+         '../../assets/images/stock4.png',
+
     ]
     
     private freePourPics = [

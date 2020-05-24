@@ -4,6 +4,7 @@ import { NavController, ModalController, ActionSheetController, LoadingControlle
 import { Subscription, from } from 'rxjs';
 import { switchMap, take, map } from 'rxjs/operators';
 import { Plugins } from '@capacitor/core';
+import { Calendar } from '@ionic-native/calendar/ngx';
 
 import { EventsService } from '../../events.service';
 import { Event } from '../../event.model';
@@ -36,6 +37,7 @@ export class EventDetailPage implements OnInit, OnDestroy {
         private authService: AuthService,
         private alertCtrl: AlertController,
         private router: Router,
+        private calendar: Calendar
     ) { }
 
     ngOnInit() {
@@ -50,15 +52,17 @@ export class EventDetailPage implements OnInit, OnDestroy {
                 this.event = event;
                 this.isLoading = false;
             }, error => {
-              this.alertCtrl.create({
-                header: 'An error occurred!',
-                message: 'Event could not be fetched. Please try again later',
-                buttons: [{text: 'Okay', handler: () => {
-                  this.router.navigate(['/events/tabs/discover'])
-                }}]
-              }).then(alertEl => {
-                alertEl.present();
-              })
+                this.alertCtrl.create({
+                    header: 'An error occurred!',
+                    message: 'Event could not be fetched. Please try again later',
+                    buttons: [{
+                        text: 'Okay', handler: () => {
+                            this.router.navigate(['/events/tabs/discover'])
+                        }
+                    }]
+                }).then(alertEl => {
+                    alertEl.present();
+                })
             });
 
         });
@@ -72,6 +76,27 @@ export class EventDetailPage implements OnInit, OnDestroy {
         this.openSignupModal(slot);
     }
 
+    calendarEvent(event, action: string) {
+        const eventLocation = "Mines Foundry in Hill Hall";
+        let day = event.day.slice(0, 10)
+        let startTime = event.startTime.slice(10)
+        let endTime = event.endTime.slice(10)
+        const eventStart = new Date(day.concat(startTime))
+        const eventEnd = new Date(day.concat(endTime))
+
+        if (action == "add") {
+            const checkExistingSignups = event.participants.filter(user => user.email == this.email)
+            if (checkExistingSignups.length > 1) return
+            this.calendar.createEvent(event.title, eventLocation, event.description, new Date(eventStart), new Date(eventEnd));
+        }
+
+        if (action == "delete") {
+            const checkExistingSignups = event.participants.filter(user => user.email == this.email)
+            if (checkExistingSignups.length > 0) return
+            this.calendar.deleteEvent(event.title, eventLocation, event.description, new Date(eventStart), new Date(eventEnd));
+        }
+    }
+
     openSignupModal(slot: number) {
         this.modalCtrl.create({
             component: CreateBookingComponent,
@@ -83,47 +108,49 @@ export class EventDetailPage implements OnInit, OnDestroy {
             })
             .then(resultData => {
 
-            const email = this.authService._email
+                const email = this.authService._email
 
-            if (resultData.role === 'confirm') {
-                this.loadingCtrl.create({
-                    message: 'Reserving slot..'
-                }).then(loadingEl => {
-                    loadingEl.present();
-                    const data = resultData.data.bookingData;
-                    this.eventsService.registerForEvent(
-                        this.event.id,
-                        data.firstName,
-                        data.lastName,
-                        email,
-                        slot
-                    ).subscribe((events) => {
-                        this.event = events
-                        loadingEl.dismiss();
+                if (resultData.role === 'confirm') {
+                    this.loadingCtrl.create({
+                        message: 'Reserving slot..'
+                    }).then(loadingEl => {
+                        loadingEl.present();
+                        const data = resultData.data.bookingData;
+                        this.eventsService.registerForEvent(
+                            this.event.id,
+                            data.firstName,
+                            data.lastName,
+                            email,
+                            slot
+                        ).subscribe((events) => {
+                            this.event = events
+                            this.calendarEvent(this.event, 'add')
+                            loadingEl.dismiss();
 
-                    });
-                })
-            }
-                
+                        });
+                    })
+                }
+
             });
     }
 
     cancelSignup(slot: number) {
         this.loadingCtrl.create({
-                message: 'Canceling reservation..'
-            }).then(loadingEl => {
-                loadingEl.present();
-                this.eventsService.registerForEvent(
-                    this.event.id,
-                    '',
-                    '',
-                    '',
-                    slot
-                ).subscribe((events) => {
-                    this.event = events
-                    loadingEl.dismiss() 
-                });
-            })
+            message: 'Canceling reservation..'
+        }).then(loadingEl => {
+            loadingEl.present();
+            this.eventsService.registerForEvent(
+                this.event.id,
+                '',
+                '',
+                '',
+                slot
+            ).subscribe((events) => {
+                this.event = events
+                this.calendarEvent(this.event, 'delete')
+                loadingEl.dismiss()
+            });
+        })
     }
 
     // onBookEvent() {

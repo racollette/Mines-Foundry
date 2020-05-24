@@ -1,6 +1,6 @@
 {
   "appId": "mines.foundry.app.ionic.angular",
-  "appName": "foundry",
+  "appName": "Mines Foundry",
   "bundledWebRuntime": false,
   "npmClient": "npm",
   "webDir": "www",

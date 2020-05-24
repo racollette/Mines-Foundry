@@ -41,7 +41,7 @@
         <ion-card>
           <ion-card-header>
             <ion-card-title>{{ relevantEvents[0].title }}</ion-card-title>
-            <ion-card-subtitle style="color: #808080;"
+            <ion-card-subtitle style="color: #808080; font-size: 0.8rem;"
               >{{ relevantEvents[0].day | date:'EEEE LLLL dd' }} - {{
               relevantEvents[0].startTime | date:'shortTime' }} to {{
               relevantEvents[0].endTime | date:'shortTime' }}
@@ -52,13 +52,20 @@
             [src]="relevantEvents[0].imageUrl1"
           ></ion-img>
           <ion-card-content>
-            <p style="font-style: italic;">{{ relevantEvents[0].description }}</p>
+            <p style="font-style: italic;">
+              {{ relevantEvents[0].description }}
+            </p>
           </ion-card-content>
           <ion-item>
-            <ion-badge *ngIf="relevantEvents[0].slotsOpen > 0" slot="start" color="warning"
+            <ion-badge
+              *ngIf="relevantEvents[0].slotsOpen > 0"
+              slot="start"
+              color="warning"
               >{{ relevantEvents[0].slotsOpen }} Spaces Left</ion-badge
             >
-            <ion-badge *ngIf="relevantEvents[0].slotsOpen <= 0" color="tertiary">Filled</ion-badge>
+            <ion-badge *ngIf="relevantEvents[0].slotsOpen <= 0" color="tertiary"
+              >Filled</ion-badge
+            >
             <ion-button
               slot="end"
               fill="clear"
@@ -92,11 +99,18 @@
               <ion-img [src]="event.imageUrl1"></ion-img>
             </ion-avatar>
             <ion-label>
-              <h2 style="padding-bottom: 5px;">{{ event.title }}</h2>
-              <ion-badge *ngIf="event.slotsOpen > 0" color="warning"
+              <div style="display: flex; align-items: center; margin-bottom: 5px;">
+                <h2>{{ event.title }}</h2>
+                <h2 style="color: #808080; margin-left: 10px; font-size: 13px;"
+                >({{ event.day | date:'LLLL dd' }})</h2
+              >
+              </div>
+              <ion-badge slot="end" *ngIf="event.slotsOpen > 0" color="warning"
                 >{{ event.slotsOpen }} Spaces Left</ion-badge
               >
-              <ion-badge *ngIf="event.slotsOpen <= 0" color="tertiary">Filled</ion-badge>
+              <ion-badge slot="end" *ngIf="event.slotsOpen <= 0" color="tertiary"
+                >Filled</ion-badge
+              >
             </ion-label>
           </ion-item>
         </ion-virtual-scroll>
