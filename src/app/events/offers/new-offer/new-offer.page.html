@@ -1,0 +1,106 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/events/tabs/offers"></ion-back-button>
+    </ion-buttons>
+    <ion-title>New Event</ion-title>
+    <ion-buttons slot="end">
+      <ion-button (click)="onCreateOffer()" [disabled]="!form.valid">
+        <ion-icon name="checkmark" slot="icon-only"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <form [formGroup]="form">
+    <ion-grid>
+      <ion-row>
+        <ion-col size-sm="6" offset-sm="3">
+          <ion-item>
+            <ion-label position="floating">Event Title</ion-label>
+            <ion-input
+              type="text"
+              autocomplete
+              autocorrect
+              formControlName="title"
+            ></ion-input>
+          </ion-item>
+        </ion-col>
+      </ion-row>
+      <ion-row>
+        <ion-col size-sm="6" offset-sm="3">
+          <ion-item>
+            <ion-label position="floating">Short Description</ion-label>
+            <ion-textarea rows="3" formControlName="description"></ion-textarea>
+          </ion-item>
+        </ion-col>
+      </ion-row>
+      <ion-row
+        *ngIf="
+          !form.get('description').valid && form.get('description').touched
+        "
+      >
+        <ion-col size-sm="6" offset-sm="3">
+          <p>Description must be between 1 and 180 characters.</p>
+        </ion-col>
+      </ion-row>
+      <ion-row>
+        <ion-col size-sm="6" offset-sm="3">
+          <ion-item>
+            <ion-label position="floating">Max Participants</ion-label>
+            <ion-input type="number" formControlName="slots"></ion-input>
+          </ion-item>
+        </ion-col>
+      </ion-row>
+      <ion-row>
+        <ion-col size-sm="6" offset-sm="3">
+          <ion-item>
+            <ion-label position="floating">Date</ion-label>
+            <ion-datetime
+              display-format="DDDD MMMM DD"
+              picker-format="MMM DD YYYY"
+              min="2020-08-20"
+              max="2021-05-21"
+              formControlName="day"
+            ></ion-datetime>
+
+            <!-- dayShortNames="Monday, Tuesday, Wednesday, Thursday, Friday, Saturday, Sunday" -->
+          </ion-item>
+        </ion-col>
+      </ion-row>
+      <ion-row>
+        <ion-col size-sm="3" offset-sm="3">
+          <ion-item>
+            <ion-label position="floating">Start Time</ion-label>
+            <!-- <ion-datetime
+              display-format="MMM DD YYYY"
+              picker-format="YY MMM DD"
+              [min]="selectedEvent.startTime.toISOString()"
+              [max]="selectedEvent.endTime.toISOString()"
+              [ngModel]="startDate"
+              name="date-from"
+              required
+              #startDateCtrl="ngModel"
+            ></ion-datetime> -->
+            <ion-datetime
+            display-format="hh mm A"
+            picker-format="hh mm A"
+            formControlName="startTime"
+            ></ion-datetime>
+          </ion-item>
+        </ion-col>
+        <ion-col size-sm="3" offset-sm="3">
+          <ion-item>
+            <ion-label position="floating">End Time</ion-label>
+            <ion-datetime
+            display-format="hh mm A"
+            picker-format="hh mm A"
+            formControlName="endTime"
+            ></ion-datetime>
+          </ion-item>
+        </ion-col>
+      </ion-row>
+    </ion-grid>
+  </form>
+</ion-content>

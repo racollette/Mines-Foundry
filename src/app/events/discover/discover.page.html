@@ -1,0 +1,106 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-menu-button></ion-menu-button>
+      <!-- <ion-button (click)="onOpenMenu()">
+        Open
+      </ion-button> -->
+    </ion-buttons>
+    <ion-title>Events</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding">
+  <ion-segment
+    color="tertiary"
+    (ionChange)="onFilterUpdate($event)"
+    value="all"
+  >
+    <ion-segment-button value="all">Upcoming Events</ion-segment-button>
+    <ion-segment-button value="bookable">Past Events</ion-segment-button>
+  </ion-segment>
+  <ion-grid *ngIf="isLoading">
+    <ion-row>
+      <ion-col size="12" size-sm="8" offset-sm="2" class="ion-text-center">
+        <ion-spinner color="tertiary"></ion-spinner>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+  <ion-grid
+    *ngIf="!isLoading && (!relevantEvents || relevantEvents.length <= 0)"
+  >
+    <ion-row>
+      <ion-col size="12" size-sm="8" offset-sm="2" class="ion-text-center">
+        <p>There are no bookable events right now, please come back later!</p>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+  <ion-grid *ngIf="!isLoading && relevantEvents.length > 0">
+    <ion-row>
+      <ion-col size="12" size-sm="8" offset-sm="2" class="ion-text-center">
+        <ion-card>
+          <ion-card-header>
+            <ion-card-title>{{ relevantEvents[0].title }}</ion-card-title>
+            <ion-card-subtitle style="color: #808080;"
+              >{{ relevantEvents[0].day | date:'EEEE LLLL dd' }} - {{
+              relevantEvents[0].startTime | date:'shortTime' }} to {{
+              relevantEvents[0].endTime | date:'shortTime' }}
+            </ion-card-subtitle>
+          </ion-card-header>
+          <ion-img
+            class="card-event-image"
+            [src]="relevantEvents[0].imageUrl1"
+          ></ion-img>
+          <ion-card-content>
+            <p style="font-style: italic;">{{ relevantEvents[0].description }}</p>
+          </ion-card-content>
+          <ion-item>
+            <ion-badge *ngIf="relevantEvents[0].slotsOpen > 0" slot="start" color="warning"
+              >{{ relevantEvents[0].slotsOpen }} Spaces Left</ion-badge
+            >
+            <ion-badge *ngIf="relevantEvents[0].slotsOpen <= 0" color="tertiary">Filled</ion-badge>
+            <ion-button
+              slot="end"
+              fill="clear"
+              color="tertiary"
+              [routerLink]="[
+                '/',
+                'events',
+                'tabs',
+                'discover',
+                relevantEvents[0].id
+              ]"
+            >
+              {{ slots ? 'Sign Up' : 'View' }}
+            </ion-button>
+          </ion-item>
+        </ion-card>
+      </ion-col>
+    </ion-row>
+    <ion-row>
+      <ion-col size="12" size-sm="8" offset-sm="2" class="ion-text-center">
+        <ion-virtual-scroll
+          [items]="listedLoadedEvents"
+          approxItemHeight="70px"
+        >
+          <ion-item
+            [routerLink]="['/', 'events', 'tabs', 'discover', event.id]"
+            detail
+            *virtualItem="let event"
+          >
+            <ion-avatar slot="start">
+              <ion-img [src]="event.imageUrl1"></ion-img>
+            </ion-avatar>
+            <ion-label>
+              <h2 style="padding-bottom: 5px;">{{ event.title }}</h2>
+              <ion-badge *ngIf="event.slotsOpen > 0" color="warning"
+                >{{ event.slotsOpen }} Spaces Left</ion-badge
+              >
+              <ion-badge *ngIf="event.slotsOpen <= 0" color="tertiary">Filled</ion-badge>
+            </ion-label>
+          </ion-item>
+        </ion-virtual-scroll>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+</ion-content>

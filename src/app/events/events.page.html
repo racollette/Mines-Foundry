@@ -1,0 +1,16 @@
+<ion-tabs>
+  <ion-tab-bar slot="bottom">
+    <ion-tab-button tab="discover">
+      <ion-label>Events</ion-label>
+      <ion-icon color="tertiary" name="finger-print-outline"></ion-icon>
+    </ion-tab-button>
+    <ion-tab-button tab="information">
+      <ion-label>Information</ion-label>
+      <ion-icon color="tertiary" name="information-circle-outline"></ion-icon>
+    </ion-tab-button>
+    <ion-tab-button tab="offers" *ngIf="this.authService.isAdmin">
+      <ion-label>Admin</ion-label>
+      <ion-icon color="tertiary" name="lock-open-outline"></ion-icon>
+    </ion-tab-button>
+  </ion-tab-bar>
+</ion-tabs>
