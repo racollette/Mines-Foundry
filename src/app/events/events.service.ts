@@ -60,28 +60,28 @@ export class EventsService {
 
     private freePourThumbnails = [
         '../../assets/images/stock1.png',
-         '../../assets/images/stock2.png',
-         '../../assets/images/stock3.png',
-         '../../assets/images/stock4.png',
+        '../../assets/images/stock2.png',
+        '../../assets/images/stock3.png',
+        '../../assets/images/stock4.png',
 
     ]
-    
+
     private freePourPics = [
-        '../../assets/images/foundry1.jpg', 
-        '../../assets/images/foundry2.jpg', 
-        '../../assets/images/foundry3.jpg', 
-        '../../assets/images/foundry4.jpg', 
-        '../../assets/images/foundry5.jpg'
+        '../../assets/images/foundry1.png',
+        '../../assets/images/foundry2.png',
+        '../../assets/images/foundry3.png',
+        '../../assets/images/foundry4.png',
+        '../../assets/images/foundry5.png'
     ]
 
     private avatars = [
-        '../../assets/images/avatar1.png', 
-        '../../assets/images/avatar2.png', 
-        '../../assets/images/avatar3.png', 
-        '../../assets/images/avatar4.png', 
+        '../../assets/images/avatar1.png',
+        '../../assets/images/avatar2.png',
+        '../../assets/images/avatar3.png',
+        '../../assets/images/avatar4.png',
         '../../assets/images/avatar5.png',
-        '../../assets/images/avatar6.png', 
-        '../../assets/images/avatar7.png', 
+        '../../assets/images/avatar6.png',
+        '../../assets/images/avatar7.png',
         '../../assets/images/avatar8.png',
         '../../assets/images/avatar9.png'
     ]
@@ -99,9 +99,11 @@ export class EventsService {
         return this.http.get<{ [key: string]: EventData }>('https://mines-foundry.firebaseio.com/offered-events.json')
             .pipe(map(resData => {
                 console.log(resData)
-                const events = [];
+
+                let events = [];
                 for (const key in resData) {
                     if (resData.hasOwnProperty(key)) {
+
                         events.push(new Event(
                             key,
                             resData[key].title,
@@ -119,6 +121,10 @@ export class EventsService {
                     }
                 }
                 //return [] 
+                // sort the events
+                // console.log(events)
+                // events = [...events].sort((a, b) => a.day - b.day)
+                events.sort((a, b) => a.day - b.day)
                 return events;
             }),
                 tap(events => {
@@ -167,16 +173,18 @@ export class EventsService {
 
             let participants = []
 
-
-            for (let i=0; i < slots; i++) {
+            for (let i = 0; i < slots; i++) {
                 let empty = {
                     firstName: '',
                     lastName: '',
                     email: '',
-                    slot: i+1
+                    slot: i + 1
                 }
                 participants.push(empty)
             }
+            console.log(day)
+            console.log(startTime)
+            console.log(endTime)
 
             newEvent = new Event(
                 Math.random().toString(),
@@ -230,7 +238,7 @@ export class EventsService {
                 updatedEvents = [...events];
                 const oldEvent = updatedEvents[updatedEventIndex]
                 const eventSlotIndex = oldEvent.participants.findIndex(pt => pt.slot === slot);
-            
+
                 oldEvent.participants[eventSlotIndex].firstName = firstName
                 oldEvent.participants[eventSlotIndex].lastName = lastName
                 oldEvent.participants[eventSlotIndex].email = email

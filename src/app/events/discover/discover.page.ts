@@ -30,7 +30,7 @@ export class DiscoverPage implements OnInit, OnDestroy {
     ngOnInit() {
         this.eventsSub = this.eventsService.events.subscribe(events => {
             this.loadedEvents = events;
-            this.relevantEvents = this.loadedEvents;
+            this.relevantEvents = this.loadedEvents
             this.listedLoadedEvents = this.relevantEvents.slice(1);
         });
     }
@@ -44,8 +44,8 @@ export class DiscoverPage implements OnInit, OnDestroy {
                 let signups = event.participants.filter(signups => signups.firstName !== "").length
                 event.slotsOpen = event.slots - signups
             })
-            
-            this.relevantEvents = this.loadedEvents;
+
+            this.relevantEvents = this.loadedEvents.filter(event => event.day > new Date)
             this.listedLoadedEvents = this.relevantEvents.slice(1);
             this.isLoading = false;
         });
@@ -57,15 +57,18 @@ export class DiscoverPage implements OnInit, OnDestroy {
 
     onFilterUpdate(event: CustomEvent<SegmentChangeEventDetail>) {
         this.authService.userId.pipe(take(1)).subscribe(userId => {
-            // if (event.detail.value === 'all') {
-                this.relevantEvents = this.loadedEvents;
+            let now = new Date
+            if (event.detail.value === 'upcoming') {
+                this.relevantEvents = this.loadedEvents.filter(
+                    event => event.day > now
+                )
                 this.listedLoadedEvents = this.relevantEvents.slice(1);
-            // } else {
-                // this.relevantEvents = this.loadedEvents.filter(
-                //     event => event.userId !== userId
-                // );
-                // this.listedLoadedEvents = this.relevantEvents.slice(1);
-            // }
+            } else {
+                this.relevantEvents = this.loadedEvents.filter(
+                    event => event.day < now
+                )
+                this.listedLoadedEvents = this.relevantEvents.slice(1);
+            }
         });
 
     }
